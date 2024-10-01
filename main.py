@@ -29,12 +29,13 @@ def main():
         limit_periods = obj['limit_period']
 
         if not is_in_hour_minute_period(*limit_periods):
-            print(f'设备：{obj["name"]}({mac}) 不在限速时间段内，不限速')
-            continue
+            print(f'设备：{obj["name"]}({mac}) 不在限速时间段内，取消限速')
+            qihoo.cancel_speed_limit(mac=mac)
 
-        limit_speed = obj['limit_speed']
-        print(f'设备：{obj["name"]}({mac}) 限速到 {limit_speed} Kb')
-        qihoo.set_speed_limit(mac=mac, upload=limit_speed, download=limit_speed)
+        else:
+            limit_speed = obj['limit_speed']
+            print(f'设备：{obj["name"]}({mac}) 限速到 {limit_speed} Kb')
+            qihoo.set_speed_limit(mac=mac, upload=limit_speed, download=limit_speed)
 
 
 main()
