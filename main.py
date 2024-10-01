@@ -20,10 +20,11 @@ def main():
 
     for mac, obj in speed_limit_obj.items():
 
+        # 貌似没有连接的也可以设置，暂时不用忽略
         # 未连接的忽略
-        if mac not in devices:
-            print(f'设备：{obj["name"]}({mac}) 未连接')
-            continue
+        # if mac not in devices:
+        #     print(f'设备：{obj["name"]}({mac}) 未连接')
+        #     continue
 
         device = devices.get(mac)
         limit_periods = obj['limit_period']
