@@ -16,10 +16,10 @@ def main():
 
     for mac, obj in speed_limit_obj.items():
 
-        limit_periods = obj['limit_period']
+        unlimit_periods = obj['unlimit_period']
 
-        if not is_in_hour_minute_period(*limit_periods):
-            print(f'设备：{obj["name"]}({mac}) 不在限速时间段内，取消限速')
+        if is_in_hour_minute_period(*unlimit_periods):
+            print(f'设备：{obj["name"]}({mac}) 在不限速时间段内，取消限速')
             qihoo.cancel_speed_limit(mac=mac)
 
         else:
