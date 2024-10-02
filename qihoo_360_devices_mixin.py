@@ -8,13 +8,12 @@ from qihoo_360_speedlimit_mixin import Qihoo360SpeedlimitMixin
 class Qihoo360DevicesMixin(Qihoo360BlacklistMixin, Qihoo360SpeedlimitMixin):
     """360路由设备管理Mixin类，黑名单管理，限速管理等"""
 
-    # noinspection PyMethodMayBeStatic
-    def mesh_get_topology_info(self, headers, cookies):
+    def mesh_get_topology_info(self):
         """获取链接设备列表信息"""
 
         response = requests.get('http://192.168.123.1/router/mesh_get_topology_info.cgi',
-                                cookies=cookies,
-                                headers=headers)
+                                cookies=self.cookies,
+                                headers=self.headers)
         response.raise_for_status()
 
         route_node = response.json()['data'][0]

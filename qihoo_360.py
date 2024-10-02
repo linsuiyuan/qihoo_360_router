@@ -1,6 +1,4 @@
 """360路由模块功能"""
-import os.path
-import pickle
 from dataclasses import dataclass
 
 from qihoo_360_devices_mixin import Qihoo360DevicesMixin
@@ -63,8 +61,7 @@ class Qihoo360(Qihoo360DevicesMixin, Qihoo360LoginMixin):
     @property
     def device_list(self):
         """连接设备列表"""
-        router_info = self.mesh_get_topology_info(headers=self.headers,
-                                                  cookies=self.cookies)
+        router_info = self.mesh_get_topology_info()
         nodes = router_info['client_node']
         return [Qihoo360Device.from_dict(n) for n in nodes]
         # return [Qihoo360Device(**n) for n in nodes]

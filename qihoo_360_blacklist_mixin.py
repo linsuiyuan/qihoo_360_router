@@ -7,7 +7,6 @@ from qihoo_client_protocol import QihooClientProtocol
 class Qihoo360BlacklistMixin(QihooClientProtocol):
     """360路由黑名单 Mixin类"""
 
-    # noinspection PyMethodMayBeStatic
     def get_blacklist(self):
         """获取黑名单列表"""
 
@@ -16,7 +15,6 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
         response.raise_for_status()
         return response.json()
 
-    # noinspection PyMethodMayBeStatic
     def set_blacklist(self, mac):
         """
         设置黑名单
@@ -30,7 +28,6 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
         response.raise_for_status()
         return response.json()
 
-    # noinspection PyMethodMayBeStatic
     def cancel_blacklist(self, mac):
         """
         取消黑名单

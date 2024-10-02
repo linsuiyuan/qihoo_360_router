@@ -1,5 +1,4 @@
 """测试 qihoo_360_login_mixin """
-import os
 
 from qihoo_360_login_mixin import Qihoo360LoginMixin
 import config

@@ -1,5 +1,4 @@
 """测试 qihoo_360"""
-from qihoo_360 import Qihoo360
 
 
 def test_get_device_list(qihoo_client):

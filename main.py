@@ -1,7 +1,6 @@
 """项目入口模块"""
 import config
 from qihoo_360 import Qihoo360User, Qihoo360
-from datetime import datetime, time
 
 from utils import is_in_hour_minute_period
 
@@ -14,19 +13,9 @@ def main():
 
     # 需要限速的业务
     speed_limit_obj = {d['mac']: d for d in config.SPEEDLIMIT_LIST}
-    devices = {d.mac: d for d in qihoo.device_list}
-    # for mac, d in devices.items():
-    #     print(f'设备：{d.name}({mac}) 已连接')
 
     for mac, obj in speed_limit_obj.items():
 
-        # 貌似没有连接的也可以设置，暂时不用忽略
-        # 未连接的忽略
-        # if mac not in devices:
-        #     print(f'设备：{obj["name"]}({mac}) 未连接')
-        #     continue
-
-        device = devices.get(mac)
         limit_periods = obj['limit_period']
 
         if not is_in_hour_minute_period(*limit_periods):

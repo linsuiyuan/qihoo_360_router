@@ -1,5 +1,4 @@
 """360路由登录Mixin"""
-from abc import abstractmethod
 
 import requests
 
@@ -10,10 +9,10 @@ from utils import qihoo_password_encrypt
 class Qihoo360LoginMixin(QihooClientProtocol):
     """360路由登录Mixin类"""
 
-    # noinspection PyMethodMayBeStatic
     def get_rank_key(self):
         """获取 rank_key, 登录加密密码需要用到"""
-        response = requests.post('http://192.168.123.1/router/get_rand_key.cgi')
+        response = requests.post('http://192.168.123.1/router/get_rand_key.cgi',
+                                 headers=self.headers)
         response.raise_for_status()
         data = response.json()
         return {

@@ -1,5 +1,4 @@
 """360限制设备速度模块"""
-from abc import abstractmethod
 
 import requests
 
@@ -7,9 +6,11 @@ from qihoo_client_protocol import QihooClientProtocol
 
 
 class Qihoo360SpeedlimitMixin(QihooClientProtocol):
-    """360路由限制设备网络速度 Mixin类"""
+    """
+    360路由限制设备网络速度 Mixin类
+    (貌似没有连接的也可以设置，路由有保存，但限速的设置看不到)
+    """
 
-    # noinspection PyMethodMayBeStatic
     def _set_speed_limit(self, enable, mac, upload, download):
         data = {
             'enable': f'{enable}',
