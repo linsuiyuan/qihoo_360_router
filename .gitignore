@@ -167,3 +167,6 @@ cython_debug/
 # 忽略 charles 文件
 其他/
 
+# 操作系统文件
+.DS_Store
+
