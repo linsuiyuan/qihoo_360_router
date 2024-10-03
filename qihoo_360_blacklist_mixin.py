@@ -1,4 +1,6 @@
 """黑名单模块"""
+import warnings
+
 import requests
 
 from qihoo_client_protocol import QihooClientProtocol
@@ -33,6 +35,8 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
         :param mac: 设备mac地址
         :return:
         """
+
+        warnings.warn("【注意】设置黑名单后取消黑名单，有时需要重启路由才能生效！")
 
         data = {'mac': mac, }
         response = requests.post('http://192.168.123.1/app/devices/webs/setblacklist.cgi',
