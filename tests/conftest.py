@@ -10,7 +10,7 @@ import config  # noqa: E402
 
 
 @pytest.fixture(scope='session')
-def qihoo_client():
+def router():
     """360用户信息"""
 
     user = Qihoo360User(username=config.USERNAME,

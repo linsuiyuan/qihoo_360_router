@@ -15,6 +15,18 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
         response.raise_for_status()
         return response.json()
 
+    def is_in_blacklist(self, mac):
+        """
+        判断是否在黑名单中
+        :param mac: 设备mac地址
+        :return:
+        """
+        blacklist = self.get_blacklist()['data']
+        for device in blacklist:
+            if mac.lower() == device['mac'].lower():
+                return True
+        return False
+
     def set_blacklist(self, mac):
         """
         设置黑名单

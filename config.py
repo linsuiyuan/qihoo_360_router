@@ -12,10 +12,17 @@ assert USERNAME is not None
 PASSWORD = QIHOO_USER['PASSWORD'][0]
 assert PASSWORD is not None
 
-
+# 限速设备列表
 SPEEDLIMIT_LIST = os.getenv('QIHOO_SPEEDLIMIT_LIST')
 assert SPEEDLIMIT_LIST is not None
 SPEEDLIMIT_LIST = json.loads(SPEEDLIMIT_LIST)
 for d in SPEEDLIMIT_LIST:
     # 由请求获得的mac地址是小写的，这里统一转换为小写
+    d['mac'] = d['mac'].lower()
+
+# 加黑名单列表
+BLACKLISTS = os.getenv('QIHOO_BLACKLISTS')
+assert BLACKLISTS is not None
+BLACKLISTS = json.loads(BLACKLISTS)
+for d in BLACKLISTS:
     d['mac'] = d['mac'].lower()
