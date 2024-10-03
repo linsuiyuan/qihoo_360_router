@@ -26,9 +26,9 @@ def _check_blacklist(qihoo: Qihoo360, blacklist):
     """黑名单业务逻辑"""
     for obj in blacklist:
         mac = obj['mac']
-        blacklist_period = obj['blacklist_period']
+        unblacklist_period = obj['unblacklist_period']
 
-        if is_in_hour_minute_period(*blacklist_period):
+        if is_in_hour_minute_period(*unblacklist_period):
             print(f'设备：{obj["name"]}({mac}) 在白名单时间段内，移除黑名单')
             qihoo.cancel_blacklist(mac=mac)
 
