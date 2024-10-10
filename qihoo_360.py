@@ -1,8 +1,8 @@
 """360路由模块功能"""
 from dataclasses import dataclass
 
-from qihoo_360_devices_mixin import Qihoo360DevicesMixin
-from qihoo_360_login_mixin import Qihoo360LoginMixin
+from mixins import Qihoo360LoginMixin
+from mixins import Qihoo360DevicesMixin
 
 
 @dataclass
@@ -44,6 +44,12 @@ class Qihoo360(Qihoo360DevicesMixin, Qihoo360LoginMixin):
         self.user = user
         self._cookies = None
 
+    @classmethod
+    def create_from(cls, *, username, password) -> "Qihoo360":
+        """直接使用用户名、密码创建实例"""
+        user = Qihoo360User(username, password)
+        return Qihoo360(user)
+
     @property
     def headers(self) -> dict:
         """headers 属性"""
@@ -64,5 +70,3 @@ class Qihoo360(Qihoo360DevicesMixin, Qihoo360LoginMixin):
         router_info = self.mesh_get_topology_info()
         nodes = router_info['client_node']
         return [Qihoo360Device.from_dict(n) for n in nodes]
-        # return [Qihoo360Device(**n) for n in nodes]
-

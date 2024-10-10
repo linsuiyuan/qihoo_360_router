@@ -3,7 +3,7 @@
 import pytest
 from dotenv import load_dotenv
 
-from qihoo_360 import Qihoo360User, Qihoo360
+from qihoo_360 import Qihoo360
 
 load_dotenv()
 import config  # noqa: E402
@@ -11,9 +11,7 @@ import config  # noqa: E402
 
 @pytest.fixture(scope='session')
 def router():
-    """360用户信息"""
-
-    user = Qihoo360User(username=config.USER.username,
-                        password=config.USER.password)
-    client = Qihoo360(user=user)
+    """360路由实例"""
+    client = Qihoo360.create_from(username=config.USER.username,
+                                  password=config.USER.password)
     yield client

@@ -61,4 +61,3 @@ BLACKLISTS = [BlacklistDeviceConfig(
     # 有值取值，没值取默认值
     unblacklist_period=d.get('unblacklist_period', _default_unblacklist_period)
 ) for d in _device_list]
-

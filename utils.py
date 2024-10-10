@@ -1,8 +1,8 @@
 """一些帮助函数"""
 import datetime
 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Cipher import AES  # noqa
+from Crypto.Util.Padding import pad, unpad  # noqa
 from binascii import unhexlify, hexlify
 
 
@@ -56,7 +56,7 @@ def qihoo_password_encrypt(key_obj, password):
     return pass_
 
 
-def is_in_hour_minute_period(*time_period: str, time_=None):
+def is_in_time_period(*time_period: str, time_=None):
     """
     判断是否在某些时间断内
     :param time_period: ['00:00-20:00', '21:00-23:59'] 或者 '00:00-20:00'
@@ -74,7 +74,7 @@ def is_in_hour_minute_period(*time_period: str, time_=None):
 
 
 if __name__ == '__main__':
-    rand_key_ = '9ceef3e0ff584938432a932b7d803c71'
+    rand_key_ = '9ceef3e000584938432a932b7d803c71'
     t = '.'
     result = qihoo_aes_encrypt(rand_key_, t)
     print(result)
