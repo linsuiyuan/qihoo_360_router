@@ -10,7 +10,7 @@ from models import Qihoo360Device
 from utils import qihoo_password_encrypt
 
 
-class Qihoo360LoginMixin(QihooClientProtocol):
+class LoginMixin(QihooClientProtocol):
     """360路由登录Mixin类"""
 
     def get_rank_key(self):
@@ -51,7 +51,7 @@ class Qihoo360LoginMixin(QihooClientProtocol):
         return cookies
 
 
-class Qihoo360BlacklistMixin(QihooClientProtocol):
+class BlacklistMixin(QihooClientProtocol):
     """360路由黑名单 Mixin类"""
 
     async def get_blacklist(self):
@@ -105,7 +105,7 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
             return response.json()
 
 
-class Qihoo360SpeedlimitMixin(QihooClientProtocol):
+class SpeedlimitMixin(QihooClientProtocol):
     """
     360路由限制设备网络速度 Mixin类
     (貌似没有连接的也可以设置，路由有保存，但限速的设置看不到)
@@ -134,7 +134,7 @@ class Qihoo360SpeedlimitMixin(QihooClientProtocol):
         return await self._set_speed_limit(enable=0, mac=mac, upload=0, download=0)
 
 
-class Qihoo360DevicesMixin(Qihoo360BlacklistMixin, Qihoo360SpeedlimitMixin):
+class DevicesMixin(BlacklistMixin, SpeedlimitMixin):
     """360路由设备管理Mixin类，黑名单管理，限速管理等"""
 
     async def mesh_get_topology_info(self):

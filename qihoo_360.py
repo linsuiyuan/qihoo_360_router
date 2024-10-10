@@ -1,16 +1,12 @@
 """360路由模块功能"""
 from functools import cached_property
 
-from mixins import Qihoo360LoginMixin
-from mixins import Qihoo360DevicesMixin
+from mixins import LoginMixin
+from mixins import DevicesMixin
 from models import Qihoo360User
 
 
-class NotLoggedInError(Exception):
-    """未登录异常"""
-
-
-class Qihoo360(Qihoo360DevicesMixin, Qihoo360LoginMixin):
+class Qihoo360(DevicesMixin, LoginMixin):
     """360路由类"""
 
     def __init__(self, user: Qihoo360User):

@@ -6,7 +6,7 @@ import pytest
 import config
 
 
-class TestQihoo360LoginMixin:
+class TestLoginMixin:
     """测试 Qihoo360LoginMixin"""
 
     def test_get_rank_key(self, router):
@@ -23,7 +23,7 @@ class TestQihoo360LoginMixin:
         assert 'Token-ID' in cookies
 
 
-class TestQihoo360BlacklistMixin:
+class TestBlacklistMixin:
     """测试 Qihoo360BlacklistMixin"""
 
     @pytest.fixture(scope='class')
@@ -58,7 +58,7 @@ class TestQihoo360BlacklistMixin:
         assert is_in_blacklist is False
 
 
-class TestQihoo360SpeedlimitMixin:
+class TestSpeedlimitMixin:
     """测试 Qihoo360SpeedlimitMixin"""
 
     @pytest.fixture(scope='class')
@@ -83,7 +83,7 @@ class TestQihoo360SpeedlimitMixin:
         assert 'err_no' in result and result['err_no'] == '0'
 
 
-class TestQihoo360DevicesMixin:
+class TestDevicesMixin:
     """测试 Qihoo360DevicesMixin"""
 
     @pytest.mark.asyncio
