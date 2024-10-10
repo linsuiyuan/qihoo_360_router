@@ -3,7 +3,7 @@ Mixin 类
 """
 import warnings
 
-import requests
+import httpx
 
 from protocols import QihooClientProtocol
 from utils import qihoo_password_encrypt
@@ -14,8 +14,8 @@ class Qihoo360LoginMixin(QihooClientProtocol):
 
     def get_rank_key(self):
         """获取 rank_key, 登录加密密码需要用到"""
-        response = requests.post('http://192.168.123.1/router/get_rand_key.cgi',
-                                 headers=self.headers)
+        response = httpx.post('http://192.168.123.1/router/get_rand_key.cgi',
+                              headers=self.headers)
         response.raise_for_status()
         data = response.json()
         return {
@@ -35,9 +35,9 @@ class Qihoo360LoginMixin(QihooClientProtocol):
             'form': '1',
         }
 
-        response = requests.post('http://192.168.123.1/router/web_login.cgi',
-                                 headers=self.headers,
-                                 data=data)
+        response = httpx.post('http://192.168.123.1/router/web_login.cgi',
+                              headers=self.headers,
+                              data=data)
         response.raise_for_status()
 
         cookies = {
@@ -55,8 +55,8 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
     def get_blacklist(self):
         """获取黑名单列表"""
 
-        response = requests.get('http://192.168.123.1/app/devices/webs/getblacklist.cgi',
-                                cookies=self.cookies, headers=self.headers)
+        response = httpx.get('http://192.168.123.1/app/devices/webs/getblacklist.cgi',
+                             cookies=self.cookies, headers=self.headers)
         response.raise_for_status()
         return response.json()
 
@@ -82,8 +82,8 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
         warnings.warn("【注意】设置黑名单后取消黑名单，有时需要重启路由才能生效！")
 
         data = {'mac': mac, }
-        response = requests.post('http://192.168.123.1/app/devices/webs/setblacklist.cgi',
-                                 cookies=self.cookies, headers=self.headers, data=data)
+        response = httpx.post('http://192.168.123.1/app/devices/webs/setblacklist.cgi',
+                              cookies=self.cookies, headers=self.headers, data=data)
         response.raise_for_status()
         return response.json()
 
@@ -94,8 +94,8 @@ class Qihoo360BlacklistMixin(QihooClientProtocol):
         :return:
         """
         data = {'mac': mac, }
-        response = requests.post('http://192.168.123.1/app/devices/webs/cancelblacklist.cgi',
-                                 cookies=self.cookies, headers=self.headers, data=data)
+        response = httpx.post('http://192.168.123.1/app/devices/webs/cancelblacklist.cgi',
+                              cookies=self.cookies, headers=self.headers, data=data)
         response.raise_for_status()
         return response.json()
 
@@ -114,8 +114,8 @@ class Qihoo360SpeedlimitMixin(QihooClientProtocol):
             'download': f'{download}',
         }
 
-        response = requests.post('http://192.168.123.1/app/devices/webs/setspeedlimit.cgi',
-                                 cookies=self.cookies, headers=self.headers, data=data)
+        response = httpx.post('http://192.168.123.1/app/devices/webs/setspeedlimit.cgi',
+                              cookies=self.cookies, headers=self.headers, data=data)
         response.raise_for_status()
         return response.json()
 
@@ -134,9 +134,9 @@ class Qihoo360DevicesMixin(Qihoo360BlacklistMixin, Qihoo360SpeedlimitMixin):
     def mesh_get_topology_info(self):
         """获取链接设备列表信息"""
 
-        response = requests.get('http://192.168.123.1/router/mesh_get_topology_info.cgi',
-                                cookies=self.cookies,
-                                headers=self.headers)
+        response = httpx.get('http://192.168.123.1/router/mesh_get_topology_info.cgi',
+                             cookies=self.cookies,
+                             headers=self.headers)
         response.raise_for_status()
 
         route_node = response.json()['data'][0]
