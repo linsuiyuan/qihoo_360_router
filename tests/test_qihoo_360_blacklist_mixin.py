@@ -10,9 +10,8 @@ import config
 def mac():
     """环境变量中的黑名单mac地址"""
     assert len(config.BLACKLISTS) > 0
-    blacklist = config.BLACKLISTS[0]
-    assert 'mac' in blacklist
-    yield blacklist['mac']
+    device = config.BLACKLISTS[0]
+    yield device.mac
 
 
 def test_get_blacklist(router):

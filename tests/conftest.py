@@ -13,7 +13,7 @@ import config  # noqa: E402
 def router():
     """360用户信息"""
 
-    user = Qihoo360User(username=config.USERNAME,
-                        password=config.PASSWORD)
+    user = Qihoo360User(username=config.USER.username,
+                        password=config.USER.password)
     client = Qihoo360(user=user)
     yield client

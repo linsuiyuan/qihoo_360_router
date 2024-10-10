@@ -1,28 +1,64 @@
 """配置文件"""
 import json
 import os
-from urllib import parse
+from typing import NamedTuple
 
-# 360路由用户名密码
-QIHOO_USER = os.getenv('QIHOO_USER')
-QIHOO_USER = parse.parse_qs(QIHOO_USER)
 
-USERNAME = QIHOO_USER['USERNAME'][0]
-assert USERNAME is not None
-PASSWORD = QIHOO_USER['PASSWORD'][0]
-assert PASSWORD is not None
+class UserConfig(NamedTuple):
+    """用户配置类"""
+    username: str
+    password: str
 
-# 限速设备列表
-SPEEDLIMIT_LIST = os.getenv('QIHOO_SPEEDLIMIT_LIST')
-assert SPEEDLIMIT_LIST is not None
-SPEEDLIMIT_LIST = json.loads(SPEEDLIMIT_LIST)
-for d in SPEEDLIMIT_LIST:
-    # 由请求获得的mac地址是小写的，这里统一转换为小写
-    d['mac'] = d['mac'].lower()
 
-# 加黑名单列表
-BLACKLISTS = os.getenv('QIHOO_BLACKLISTS')
-assert BLACKLISTS is not None
-BLACKLISTS = json.loads(BLACKLISTS)
-for d in BLACKLISTS:
-    d['mac'] = d['mac'].lower()
+class SpeedlimitDeviceConfig(NamedTuple):
+    """速度限制设备配置类"""
+    name: str
+    mac: str
+    unlimit_period: list[str]
+    limit_speed: int
+
+
+class BlacklistDeviceConfig(NamedTuple):
+    """黑名单设置配置类"""
+    name: str
+    mac: str
+    unblacklist_period: list[str]
+
+
+_qihoo_360 = json.loads(os.getenv('QIHOO_360'))
+
+"""
+360路由用户
+"""
+_user = _qihoo_360['user']
+USER = UserConfig(_user['username'], _user['password'])
+
+"""
+限速设备列表
+"""
+_speedlimits = _qihoo_360['speedlimits']
+_device_list: list[dict] = _speedlimits['device_list']
+_default_unlimit_period = _speedlimits['default_unlimit_period']
+_default_limit_speed = _speedlimits['default_limit_speed']
+SPEEDLIMIT_LIST = [SpeedlimitDeviceConfig(
+    name=d['name'],
+    # 统一转为小写，方便比较
+    mac=d['mac'].lower(),
+    # 有值取值，没值取默认值
+    unlimit_period=d.get('unlimit_period', _default_unlimit_period),
+    limit_speed=d.get('limit_speed', _default_limit_speed)
+) for d in _device_list]
+
+"""
+黑名单列表
+"""
+_blacklists = _qihoo_360['blacklists']
+_device_list: list[dict] = _blacklists['device_list']
+_default_unblacklist_period = _blacklists['default_unblacklist_period']
+BLACKLISTS = [BlacklistDeviceConfig(
+    name=d['name'],
+    mac=d['mac'],
+    # 有值取值，没值取默认值
+    unblacklist_period=d.get('unblacklist_period', _default_unblacklist_period)
+) for d in _device_list]
+
