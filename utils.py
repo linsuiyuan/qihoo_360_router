@@ -1,5 +1,6 @@
 """一些帮助函数"""
 import datetime
+import functools
 
 from Crypto.Cipher import AES  # noqa
 from Crypto.Util.Padding import pad, unpad  # noqa
@@ -73,11 +74,23 @@ def is_in_time_period(*time_period: str, time_=None):
     return False
 
 
+def run_with_semaphore(sem):
+    """限制异步并发数量"""
+    def decorator(func):  # noqa
+        @functools.wraps(func)
+        async def wrapper(*args, **kwargs):  # noqa
+            async with sem:
+                result = await func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator
+
+
 if __name__ == '__main__':
     rand_key_ = '9ceef3e000584938432a932b7d803c71'
     t = '.'
-    result = qihoo_aes_encrypt(rand_key_, t)
-    print(result)
+    res = qihoo_aes_encrypt(rand_key_, t)
+    print(res)
 
-    result = qihoo_aes_decrypt(rand_key_, result)
-    print(result)
+    res = qihoo_aes_decrypt(rand_key_, res)
+    print(res)

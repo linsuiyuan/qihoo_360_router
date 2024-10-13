@@ -1,2 +1,3 @@
 httpx~=0.27.2
 pycryptodome~=3.20.0
+trio~=0.26.2
