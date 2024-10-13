@@ -28,6 +28,11 @@ class BlacklistDeviceConfig(NamedTuple):
 _qihoo_360 = json.loads(os.getenv('QIHOO_360'))
 
 """
+360路由地址
+"""
+ROUTE_URL = _qihoo_360['route_url']
+
+"""
 360路由用户
 """
 _user = _qihoo_360['user']

@@ -5,6 +5,7 @@
 需要定义一个 `QIHOO_360` 的环境变量，其格式是一个`json`，相关字段示例如下：
 ```json
 {
+  "route_url":"http://192.168.123.1",
   "user": {
     "username": "username",
     "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -46,5 +47,5 @@
 
 ## 存在的问题
 ### 黑名单管理
-不知道是不是使用多个路由器拓扑网络的原因，设置黑名单，然后解除黑名单，然后设备还是使用不了WiFi（从路由）。
-需要对从路由进行重启，然后才可以正常使用
+不知道是不是使用多个路由器拓扑网络的原因，设置黑名单，再解除黑名单，然后设备有时使用不了WiFi。
+需要重启路由，然后才可以正常使用
