@@ -11,7 +11,7 @@
 需要定义一个 `QIHOO_360` 的环境变量，其格式是一个`json`，相关字段示例如下：
 ```json
 {
-  "route_url": "http://192.168.123.1",
+  "route_url": "http://192.168.0.1",
   "user": {
     "username": "username",
     "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
