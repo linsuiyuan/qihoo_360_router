@@ -8,7 +8,7 @@ import httpx
 from protocols import QihooClientProtocol
 from models import Qihoo360Device
 from utils import qihoo_password_encrypt
-from config import ROUTE_URL
+import config
 
 
 class LoginMixin(QihooClientProtocol):
@@ -17,7 +17,7 @@ class LoginMixin(QihooClientProtocol):
     def get_rank_key(self):
         """获取 rank_key, 登录加密密码需要用到"""
 
-        response = httpx.post(f'{ROUTE_URL}/router/get_rand_key.cgi',
+        response = httpx.post(f'{config.ROUTE_URL}/router/get_rand_key.cgi',
                               headers=self.headers)
         response.raise_for_status()
         data = response.json()
@@ -38,7 +38,7 @@ class LoginMixin(QihooClientProtocol):
             'form': '1',
         }
 
-        response = httpx.post(f'{ROUTE_URL}/router/web_login.cgi',
+        response = httpx.post(f'{config.ROUTE_URL}/router/web_login.cgi',
                               headers=self.headers,
                               data=data)
         response.raise_for_status()
@@ -58,7 +58,7 @@ class BlacklistMixin(QihooClientProtocol):
     async def get_blacklist(self):
         """获取黑名单列表"""
         async with httpx.AsyncClient() as client:
-            response = await client.get(f'{ROUTE_URL}/app/devices/webs/getblacklist.cgi',
+            response = await client.get(f'{config.ROUTE_URL}/app/devices/webs/getblacklist.cgi',
                                         cookies=self.cookies, headers=self.headers)
             response.raise_for_status()
             return response.json()
@@ -87,7 +87,7 @@ class BlacklistMixin(QihooClientProtocol):
 
         data = {'mac': mac, }
         async with httpx.AsyncClient() as client:
-            response = await client.post(f'{ROUTE_URL}/app/devices/webs/setblacklist.cgi',
+            response = await client.post(f'{config.ROUTE_URL}/app/devices/webs/setblacklist.cgi',
                                          cookies=self.cookies, headers=self.headers, data=data)
             response.raise_for_status()
             return response.json()
@@ -100,7 +100,7 @@ class BlacklistMixin(QihooClientProtocol):
         """
         data = {'mac': mac, }
         async with httpx.AsyncClient() as client:
-            response = await client.post(f'{ROUTE_URL}/app/devices/webs/cancelblacklist.cgi',
+            response = await client.post(f'{config.ROUTE_URL}/app/devices/webs/cancelblacklist.cgi',
                                          cookies=self.cookies, headers=self.headers, data=data)
             response.raise_for_status()
             return response.json()
@@ -121,7 +121,7 @@ class SpeedlimitMixin(QihooClientProtocol):
         }
 
         async with httpx.AsyncClient() as client:
-            response = await client.post(f'{ROUTE_URL}/app/devices/webs/setspeedlimit.cgi',
+            response = await client.post(f'{config.ROUTE_URL}/app/devices/webs/setspeedlimit.cgi',
                                          cookies=self.cookies, headers=self.headers, data=data)
             response.raise_for_status()
             return response.json()
@@ -142,7 +142,7 @@ class DevicesMixin(BlacklistMixin, SpeedlimitMixin):
         """获取拓扑网络所有设备列表信息"""
 
         async with httpx.AsyncClient() as client:
-            response = await client.get(f'{ROUTE_URL}/router/mesh_get_topology_info.cgi',
+            response = await client.get(f'{config.ROUTE_URL}/router/mesh_get_topology_info.cgi',
                                         cookies=self.cookies,
                                         headers=self.headers)
             response.raise_for_status()
@@ -159,7 +159,7 @@ class DevicesMixin(BlacklistMixin, SpeedlimitMixin):
     async def device_list(self):
         """获取连接的设备列表"""
         async with httpx.AsyncClient() as client:
-            response = await client.get(f'{ROUTE_URL}/app/devices/webs/getdeviceslist.cgi',
+            response = await client.get(f'{config.ROUTE_URL}/app/devices/webs/getdeviceslist.cgi',
                                         cookies=self.cookies,
                                         headers=self.headers)
             response.raise_for_status()

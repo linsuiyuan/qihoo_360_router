@@ -58,3 +58,10 @@ async def main():
 
 
 trio.run(main)
+# 如果有子路由，则同样运行一遍，好像有缓存
+if config.SUB_ROUTE_URL:
+    print(f"有子路由：{config.SUB_ROUTE_URL}，在子路由上执行一遍")
+    ROUTE_URL = config.ROUTE_URL
+    config.ROUTE_URL = config.SUB_ROUTE_URL
+    trio.run(main)
+    config.ROUTE_URL = ROUTE_URL
