@@ -19,8 +19,8 @@ async def _check_speedlimit(qihoo: Qihoo360, device):
     unlimit_periods = device.unlimit_period
 
     if is_in_time_period(*unlimit_periods):
-        print(f'设备：{device.name}({mac}) 在不限速时间段内，取消限速')
-        await qihoo.cancel_speed_limit(mac=mac)
+        print(f'设备：{device.name}({mac}) 在不限速时间段内，放宽网速')
+        await qihoo.set_speed_limit(mac=mac, upload=10 * 1000, download=80 * 1000)
 
     else:
         limit_speed = device.limit_speed
