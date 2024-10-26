@@ -93,7 +93,32 @@ class TestDevicesMixin:
 
     @pytest.mark.asyncio
     async def test_get_device_list(self, router):
-
         devices = await router.device_list()
         for d in devices:
             print(d)
+
+
+class TestVirtualServiceMixin:
+    """测试 VirtualServiceMixin"""
+
+    def test_virtual_service_list(self, router):
+        vs_list = router.virtual_service_list()
+        print(vs_list)
+
+    def test_virtual_service_add(self, router):
+        result = router.virtual_service_add(name="pytest1",
+                                            internal_ip="192.168.x.x",
+                                            external_port=18888,
+                                            internal_port=16666)
+        assert result == ['SUCCESS']
+
+    def test_virtual_service_del(self, router):
+        result = router.virtual_service_del(name="pytest1",
+                                            internal_ip="192.168.x.x",
+                                            external_port=18888,
+                                            internal_port=16666)
+        assert result == ['SUCCESS']
+
+    def test_virtual_service_clean(self, router):
+        result = router.virtual_service_clean()
+        assert result == ['SUCCESS']

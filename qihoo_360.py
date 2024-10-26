@@ -2,11 +2,12 @@
 from functools import cached_property
 
 from mixins import LoginMixin
+from mixins import SettingsMixin
 from mixins import DevicesMixin
 from models import Qihoo360User
 
 
-class Qihoo360(DevicesMixin, LoginMixin):
+class Qihoo360(SettingsMixin, DevicesMixin, LoginMixin):
     """360路由类"""
 
     def __init__(self, user: Qihoo360User):

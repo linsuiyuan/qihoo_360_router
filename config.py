@@ -5,13 +5,17 @@ from typing import NamedTuple
 
 
 class UserConfig(NamedTuple):
-    """用户配置类"""
+    """
+    用户配置类
+    """
     username: str
     password: str
 
 
 class SpeedlimitDeviceConfig(NamedTuple):
-    """速度限制设备配置类"""
+    """
+    速度限制设备配置类
+    """
     name: str
     mac: str
     unlimit_period: list[str]
@@ -19,10 +23,22 @@ class SpeedlimitDeviceConfig(NamedTuple):
 
 
 class BlacklistDeviceConfig(NamedTuple):
-    """黑名单设置配置类"""
+    """
+    黑名单设置配置类
+    """
     name: str
     mac: str
     unblacklist_period: list[str]
+
+
+class VirtualServiceConfig(NamedTuple):
+    """
+    端口映射配置类
+    """
+    name: str
+    internal_ip: str
+    internal_port: int
+    external_port: int
 
 
 _qihoo_360 = json.loads(os.getenv('QIHOO_360'))
@@ -69,5 +85,16 @@ BLACKLISTS = [BlacklistDeviceConfig(
 ) for d in _device_list]
 
 
+"""
+端口映射
+"""
+_virtual_services = os.getenv("QIHOO_360_VIRTUAL_SERVICES")
+_virtual_services = (json.loads(_virtual_services)
+                     if _virtual_services
+                     else [])
+QIHOO_360_VIRTUAL_SERVICES = [VirtualServiceConfig(name, in_ip, in_port, ex_port)
+                              for name, in_ip, in_port, ex_port in _virtual_services]
+
 if __name__ == '__main__':
     print(_qihoo_360)
+    print(QIHOO_360_VIRTUAL_SERVICES)

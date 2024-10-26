@@ -165,3 +165,91 @@ class DevicesMixin(BlacklistMixin, SpeedlimitMixin):
             response.raise_for_status()
             data = response.json()['data']
             return [Qihoo360Device.from_dict(n) for n in data]
+
+
+class VirtualServiceMixin(QihooClientProtocol):
+    """
+    端口映射相关功能
+    """
+    def virtual_service_list(self):
+        """端口映射列表"""
+        response = httpx.post(
+            f'{config.ROUTE_URL}/app/portmap/webs/virtual_service_list_show.cgi',
+            cookies=self.cookies,
+            headers=self.headers,
+            verify=False,
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def _virtual_service_add_del(self, name, internal_ip, external_port, internal_port, mode):
+        """
+        添加或删除端口映射
+        :param name: 端口名称
+        :param internal_ip: 内部ip
+        :param external_port: 外部端口
+        :param internal_port: 内部端口
+        :param mode: 添加或删除，0表示添加，2表示删除
+        """
+        data = {
+            'name': name,
+            'in_ip': internal_ip,
+            'protocol': 'tcp',
+            'out_start_port': external_port,
+            'out_end_port': external_port,
+            'in_start_port': internal_port,
+            'in_end_port': internal_port,
+            'uiname': 'ALL',
+            'mode': mode,
+        }
+
+        response = httpx.post(
+            f'{config.ROUTE_URL}/app/portmap/webs/virtual_service_add_del.cgi',
+            cookies=self.cookies,
+            headers=self.headers,
+            data=data,
+            verify=False,
+        )
+        response.raise_for_status()
+
+        return response.json()
+
+    def virtual_service_add(self, name, internal_ip, external_port, internal_port):
+        """
+        添加端口映射
+        """
+        return self._virtual_service_add_del(name=name,
+                                             internal_ip=internal_ip,
+                                             external_port=external_port,
+                                             internal_port=internal_port,
+                                             mode=0)
+
+    def virtual_service_del(self, name, internal_ip, external_port, internal_port):
+        """
+        删除端口映射
+        """
+        return self._virtual_service_add_del(name=name,
+                                             internal_ip=internal_ip,
+                                             external_port=external_port,
+                                             internal_port=internal_port,
+                                             mode=2)
+
+    def virtual_service_clean(self):
+        """
+        清除全部端口映射
+        """
+        response = httpx.post(
+            f'{config.ROUTE_URL}/app/portmap/webs/virtual_service_clean.cgi',
+            cookies=self.cookies,
+            headers=self.headers,
+            verify=False,
+        )
+        response.raise_for_status()
+
+        return response.json()
+
+
+class SettingsMixin(VirtualServiceMixin):
+    """
+    路由设置相关 Mixin类
+    """
