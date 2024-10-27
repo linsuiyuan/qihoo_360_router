@@ -4,7 +4,7 @@ import pytest
 from dotenv import load_dotenv
 
 
-load_dotenv()
+load_dotenv("../dev.env")
 import config  # noqa: E402
 from qihoo_360 import Qihoo360  # noqa: E402
 

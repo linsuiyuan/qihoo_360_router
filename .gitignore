@@ -123,7 +123,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+*.env
 .venv
 env/
 venv/
@@ -165,7 +165,7 @@ cython_debug/
 .vscode/
 
 # 忽略 charles 文件
-其他/
+tmp/
 
 # 操作系统文件
 .DS_Store
