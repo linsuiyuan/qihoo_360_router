@@ -48,15 +48,6 @@ def qihoo_aes_decrypt(rand_key_hex, ciphertext_hex):
     return plaintext.decode('utf-8')
 
 
-def qihoo_password_encrypt(key_obj, password):
-    """360路由密码加密"""
-    password = qihoo_aes_decrypt(password[:32], password[32:])
-    encrypt_pass = qihoo_aes_encrypt(rand_key_hex=key_obj['rand_key'],
-                                     text=password)
-    pass_ = key_obj['key_index'] + encrypt_pass
-    return pass_
-
-
 def is_in_time_period(*time_period: str, time_=None):
     """
     判断是否在某些时间断内
@@ -84,13 +75,3 @@ def run_with_semaphore(sem):
             return result
         return wrapper
     return decorator
-
-
-if __name__ == '__main__':
-    rand_key_ = '9ceef3e000584938432a932b7d803c71'
-    t = '.'
-    res = qihoo_aes_encrypt(rand_key_, t)
-    print(res)
-
-    res = qihoo_aes_decrypt(rand_key_, res)
-    print(res)
