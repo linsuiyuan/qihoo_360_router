@@ -47,8 +47,8 @@ async def _check_blacklist(qihoo: Qihoo360, device):
 
 async def main():
     """主入口"""
-    qihoo = Qihoo360.create_from(username=config.USER.username,
-                                 password=config.USER.password)
+    qihoo = Qihoo360(username=config.USER.username,
+                     password=config.USER.password)
 
     async with trio.open_nursery() as nursery:
         for device in config.SPEEDLIMIT_LIST:

@@ -4,21 +4,15 @@ from functools import cached_property
 from mixins import LoginMixin
 from mixins import SettingsMixin
 from mixins import DevicesMixin
-from models import Qihoo360User
 
 
 class Qihoo360(SettingsMixin, DevicesMixin, LoginMixin):
     """360路由类"""
 
-    def __init__(self, user: Qihoo360User):
-        self.user = user
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
         self._cookies = None
-
-    @classmethod
-    def create_from(cls, *, username, password) -> "Qihoo360":
-        """直接使用用户名、密码创建实例"""
-        user = Qihoo360User(username, password)
-        return Qihoo360(user)
 
     @property
     def headers(self) -> dict:
@@ -28,5 +22,5 @@ class Qihoo360(SettingsMixin, DevicesMixin, LoginMixin):
 
     @cached_property
     def cookies(self):
-        return self.login(username=self.user.username,
-                          password=self.user.password)
+        return self.login(username=self.username,
+                          password=self.password)

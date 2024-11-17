@@ -5,8 +5,8 @@ from qihoo_360 import Qihoo360
 
 def sync_virtual_service():
     """同步端口映射"""
-    qihoo = Qihoo360.create_from(username=config.USER.username,
-                                 password=config.USER.password)
+    qihoo = Qihoo360(username=config.USER.username,
+                     password=config.USER.password)
 
     env_vs_list = config.QIHOO_360_VIRTUAL_SERVICES
 

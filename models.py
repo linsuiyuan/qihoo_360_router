@@ -3,13 +3,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Qihoo360User:
-    """360路由用户类"""
-    username: str
-    password: str
-
-
-@dataclass
 class Qihoo360Device:
     """360路由连接设备类"""
     # 设备mac地址
