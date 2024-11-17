@@ -6,7 +6,6 @@ import warnings
 import httpx
 
 from protocols import QihooClientProtocol
-from models import Qihoo360Device
 from utils import qihoo_password_encrypt
 import config
 
@@ -164,7 +163,7 @@ class DevicesMixin(BlacklistMixin, SpeedlimitMixin):
                                         headers=self.headers)
             response.raise_for_status()
             data = response.json()['data']
-            return [Qihoo360Device.from_dict(n) for n in data]
+            return data
 
 
 class VirtualServiceMixin(QihooClientProtocol):
