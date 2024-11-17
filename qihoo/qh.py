@@ -2,12 +2,15 @@ import warnings
 
 import httpx
 
-from config import ROUTE_URL, USER
+from config import ROUTE_URL
 from qihoo.utils import qihoo_aes_decrypt, qihoo_aes_encrypt
 
 
 class Router:
     """路由基类"""
+    # 路由器地址
+    baseurl: str
+    # 路由器全局网络请求实例
     req: httpx.Client
 
 
@@ -15,7 +18,7 @@ class RouterPlugin:
     """路由插件，实现路由某项功能的类的基类"""
 
     def __init__(self, router: Router):
-        self.router = router
+        self.baseurl = router.baseurl
         self.req = router.req
 
 
@@ -24,7 +27,7 @@ class BlackList(RouterPlugin):
 
     def list(self):
         """获取黑名单列表"""
-        response = self.req.get(f'{ROUTE_URL}/app/devices/webs/getblacklist.cgi')
+        response = self.req.get(f'{self.baseurl}/app/devices/webs/getblacklist.cgi')
         response.raise_for_status()
         return response.json()
 
@@ -41,16 +44,16 @@ class BlackList(RouterPlugin):
                 return True
         return False
 
-    def set(self, mac):
+    def add(self, mac):
         """
-        设置黑名单
+        添加黑名单
         :param mac: 设备mac地址
         :return:
         """
 
-        warnings.warn("【注意】设置黑名单后取消黑名单，有时需要重启路由才能生效！")
+        warnings.warn("【注意】添加黑名单后取消黑名单，有时需要重启路由才能生效！")
 
-        response = self.req.post(f'{ROUTE_URL}/app/devices/webs/setblacklist.cgi',
+        response = self.req.post(f'{self.baseurl}/app/devices/webs/setblacklist.cgi',
                                  data={'mac': mac})
         response.raise_for_status()
         return response.json()
@@ -61,7 +64,7 @@ class BlackList(RouterPlugin):
         :param mac: 设备mac地址
         :return:
         """
-        response = self.req.post(f'{ROUTE_URL}/app/devices/webs/cancelblacklist.cgi',
+        response = self.req.post(f'{self.baseurl}/app/devices/webs/cancelblacklist.cgi',
                                  data={'mac': mac})
         response.raise_for_status()
         return response.json()
@@ -73,7 +76,7 @@ class SpeedLimit(RouterPlugin):
     (貌似没有连接的也可以设置，路由有保存，但限速的设置看不到)
     """
 
-    def _set_speed_limit(self, enable, mac, upload, download):
+    def _set(self, enable, mac, upload, download):
         data = {
             'enable': f'{enable}',
             'mac': mac,
@@ -81,18 +84,18 @@ class SpeedLimit(RouterPlugin):
             'download': f'{download}',
         }
 
-        response = self.req.post(f'{ROUTE_URL}/app/devices/webs/setspeedlimit.cgi',
+        response = self.req.post(f'{self.baseurl}/app/devices/webs/setspeedlimit.cgi',
                                  data=data)
         response.raise_for_status()
         return response.json()
 
-    def set_speed_limit(self, mac, upload, download):
+    def set(self, mac, upload, download):
         """设置设备限速"""
-        return self._set_speed_limit(enable=1, mac=mac, upload=upload, download=download)
+        return self._set(enable=1, mac=mac, upload=upload, download=download)
 
-    def cancel_speed_limit(self, mac):
+    def cancel(self, mac):
         """取消限速"""
-        return self._set_speed_limit(enable=0, mac=mac, upload=0, download=0)
+        return self._set(enable=0, mac=mac, upload=0, download=0)
 
 
 class Devices(RouterPlugin):
@@ -100,7 +103,7 @@ class Devices(RouterPlugin):
 
     def topology_info(self):
         """获取拓扑网络所有设备列表信息"""
-        response = self.req.get(f'{ROUTE_URL}/router/mesh_get_topology_info.cgi')
+        response = self.req.get(f'{self.baseurl}/router/mesh_get_topology_info.cgi')
         response.raise_for_status()
 
         # client_node 表示设备节点
@@ -111,10 +114,17 @@ class Devices(RouterPlugin):
 
     def list(self):
         """获取连接的设备列表"""
-        response = self.req.get(f'{ROUTE_URL}/app/devices/webs/getdeviceslist.cgi')
+        response = self.req.get(f'{self.baseurl}/app/devices/webs/getdeviceslist.cgi')
         response.raise_for_status()
         data = response.json()['data']
         return data
+
+    def mesh_node_list(self):
+        topology_info = self.topology_info()
+        mesh_nodes = topology_info["mesh_node"]
+        if mesh_nodes:
+            for node in mesh_nodes:
+                yield node
 
 
 class VirtualService(RouterPlugin):
@@ -124,7 +134,7 @@ class VirtualService(RouterPlugin):
 
     def list(self):
         """端口映射列表"""
-        response = self.req.post(f'{ROUTE_URL}/app/portmap/webs/virtual_service_list_show.cgi')
+        response = self.req.post(f'{self.baseurl}/app/portmap/webs/virtual_service_list_show.cgi')
         response.raise_for_status()
         return response.json()
 
@@ -149,7 +159,7 @@ class VirtualService(RouterPlugin):
             'mode': mode,
         }
 
-        response = self.req.post(f'{ROUTE_URL}/app/portmap/webs/virtual_service_add_del.cgi',
+        response = self.req.post(f'{self.baseurl}/app/portmap/webs/virtual_service_add_del.cgi',
                                  data=data)
         response.raise_for_status()
 
@@ -179,7 +189,7 @@ class VirtualService(RouterPlugin):
         """
         清除全部端口映射
         """
-        response = self.req.post(f'{ROUTE_URL}/app/portmap/webs/virtual_service_clean.cgi')
+        response = self.req.post(f'{self.baseurl}/app/portmap/webs/virtual_service_clean.cgi')
         response.raise_for_status()
 
         return response.json()
@@ -188,9 +198,10 @@ class VirtualService(RouterPlugin):
 class Qihoo(Router):
     """360路由"""
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, router_url=ROUTE_URL):
         self.username = username
         self.password = password
+        self.baseurl = router_url
 
         self.req = httpx.Client(headers={'Referer': 'default'})
 
@@ -204,7 +215,7 @@ class Qihoo(Router):
     def _get_rank_key(self):
         """获取 rank_key, 登录加密密码需要用到"""
 
-        response = self.req.post(f'{ROUTE_URL}/router/get_rand_key.cgi')
+        response = self.req.post(f'{self.baseurl}/router/get_rand_key.cgi')
         response.raise_for_status()
         data = response.json()
         return {
@@ -230,7 +241,7 @@ class Qihoo(Router):
             'form': '1',
         }
 
-        response = self.req.post(f'{ROUTE_URL}/router/web_login.cgi',
+        response = self.req.post(f'{self.baseurl}/router/web_login.cgi',
                                  data=data)
         response.raise_for_status()
 
