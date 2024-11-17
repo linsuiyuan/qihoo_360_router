@@ -1,6 +1,8 @@
+import warnings
+
 import httpx
 
-from config import ROUTE_URL
+from config import ROUTE_URL, USER
 from qihoo.utils import qihoo_aes_decrypt, qihoo_aes_encrypt
 
 
@@ -9,13 +11,65 @@ class Router:
     req: httpx.Client
 
 
+class BlackList:
+
+    def __init__(self, router: Router):
+        self.req = router.req
+
+    def list(self):
+        """获取黑名单列表"""
+        response = self.req.get(f'{ROUTE_URL}/app/devices/webs/getblacklist.cgi')
+        response.raise_for_status()
+        return response.json()
+
+    def exists(self, mac):
+        """
+        判断是否在黑名单中
+        :param mac: 设备mac地址
+        :return:
+        """
+        blacklist = self.list()
+        blacklist = blacklist['data']
+        for device in blacklist:
+            if mac.lower() == device['mac'].lower():
+                return True
+        return False
+
+    def set(self, mac):
+        """
+        设置黑名单
+        :param mac: 设备mac地址
+        :return:
+        """
+
+        warnings.warn("【注意】设置黑名单后取消黑名单，有时需要重启路由才能生效！")
+
+        response = self.req.post(f'{ROUTE_URL}/app/devices/webs/setblacklist.cgi',
+                                 data={'mac': mac})
+        response.raise_for_status()
+        return response.json()
+
+    def remove(self, mac):
+        """
+        移除黑名单
+        :param mac: 设备mac地址
+        :return:
+        """
+        response = self.req.post(f'{ROUTE_URL}/app/devices/webs/cancelblacklist.cgi',
+                                 data={'mac': mac})
+        response.raise_for_status()
+        return response.json()
+
+
 class Qihoo(Router):
     """360路由"""
 
     def __init__(self, username, password):
         self.username = username
         self.password = password
+
         self.req = httpx.Client(headers={'Referer': 'default'})
+        self.blacklist = BlackList(self)
 
         self._login()
 
@@ -58,3 +112,8 @@ class Qihoo(Router):
             'Token-ID': response.json()['Token-ID'],
         }
         self.req.cookies.update(cookies)
+
+
+if __name__ == '__main__':
+    qh = Qihoo(USER.username, USER.password)
+    print(qh.blacklist.list())
