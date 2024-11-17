@@ -1,9 +1,9 @@
 """360路由模块功能"""
 from functools import cached_property
 
-from mixins import LoginMixin
-from mixins import SettingsMixin
-from mixins import DevicesMixin
+from qihoo.mixins import LoginMixin
+from qihoo.mixins import SettingsMixin
+from qihoo.mixins import DevicesMixin
 
 
 class Qihoo360(SettingsMixin, DevicesMixin, LoginMixin):

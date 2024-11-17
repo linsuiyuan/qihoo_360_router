@@ -5,8 +5,8 @@ import warnings
 
 import httpx
 
-from protocols import QihooClientProtocol
-from utils import qihoo_password_encrypt
+from qihoo.protocols import QihooClientProtocol
+from qihoo.utils import qihoo_password_encrypt
 import config
 
 

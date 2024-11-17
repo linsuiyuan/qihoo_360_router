@@ -2,10 +2,10 @@
 import trio
 
 import config
-from qihoo_360 import Qihoo360
+from qihoo.qihoo_360 import Qihoo360
 
-from utils import is_in_time_period
-from utils import run_with_semaphore
+from qihoo.utils import is_in_time_period
+from qihoo.utils import run_with_semaphore
 
 # 限制同时运行的任务数量
 sem = trio.Semaphore(5)

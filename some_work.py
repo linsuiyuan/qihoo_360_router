@@ -1,6 +1,6 @@
 """一些手动执行的功能"""
 import config
-from qihoo_360 import Qihoo360
+from qihoo.qihoo_360 import Qihoo360
 
 
 def sync_virtual_service():
